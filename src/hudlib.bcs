@@ -1,0 +1,718 @@
+// When adding new properties, don't forget to edit ACSUTILS_HUDSTATE_SIZE.
+@privconst int ACSUTILS_HUDLIB_SAVEDSTATES = 16;
+@privconst int ACSUTILS_HUDSTATE_SIZE = 39;
+@privconst int ACSUTILS_HUDLIB_STACKSIZE = ACSUTILS_HUDSTATE_SIZE * ACSUTILS_HUDLIB_SAVEDSTATES;
+
+@bool R_Is3DPoint = false;
+
+@fixed R3D_CameraX = 0.0;
+@fixed R3D_CameraY = 0.0;
+@fixed R3D_CameraZ = 0.0;
+@fixed R3D_CameraAngle = 0.0;
+@fixed R3D_CameraPitch = 0.0;
+
+@fixed R3D_X = 0.0;
+@fixed R3D_Y = 0.0;
+@fixed R3D_Z = 0.0;
+
+@fixed R3D_2DOffsetX = 0.0;
+@fixed R3D_2DOffsetY = 0.0;
+
+@bool R3D_AutoDistanceScale = true;
+
+@fixed R_BaseWidth = 640.0;
+@fixed R_BaseHeight = 480.0;
+@fixed R_ExcludeStatusBar = false;
+
+@fixed R_X = 0.0;
+@fixed R_Y = 0.0;
+
+@fixed R_IScaleX = 1.0;
+@fixed R_IScaleY = 1.0;
+
+@bool R_ShowToEveryone = false;
+
+@fixed R_AppearTime = 0.0;
+@int R_StayTime = HUD_STAYTIME_FOREVER;
+@fixed R_DisappearTime = 0.0;
+
+@int R_BlendStyle = HUD_BLENDSTYLE_NORMAL;
+@fixed R_Alpha = 1.0;
+
+@bool R_ShowIn3DView = true;
+@bool R_ShowOnFullAutomap = true;
+@bool R_ShowOnOverlayAutomap = true;
+
+@bool R_Layer = HUDMSG_LAYER_OVERHUD;
+
+@int R_TextOriginX = HUD_TEXTORIGIN_CENTER;
+@int R_TextOriginY = HUD_TEXTORIGIN_CENTER;
+@bool R_CenterText = false;
+@bool R_TextColorIsString = false;
+@int R_TextColor = CR_UNTRANSLATED;
+@bool R_TextTypeOn = false;
+@bool R_LogMessage = false;
+@bool R_TextWordWrap = false;
+	
+@int HudStateStackTop = 0;
+	
+@fixed R_RotatedX = 0;
+@fixed R_RotatedY = 0;
+@fixed R_RotatedZ = 0;
+	
+	
+@int R3D_ProjectionMode = HUD_PROJECTION_AUTO;
+
+@str R_TextFont = "SMALLFONT";
+
+
+function void HudResetState(void)
+{
+	$R_Is3DPoint = false;
+
+
+	$R3D_CameraX = 0.0;
+	$R3D_CameraY = 0.0;
+	$R3D_CameraZ = 0.0;
+	$R3D_CameraAngle = 0.0;
+	$R3D_CameraPitch = 0.0;
+
+	$R3D_X = 0.0;
+	$R3D_Y = 0.0;
+	$R3D_Z = 0.0;
+
+	$R3D_2DOffsetX = 0.0;
+	$R3D_2DOffsetY = 0.0;
+
+	$R3D_AutoDistanceScale = true;
+	$R3D_ProjectionMode = HUD_PROJECTION_AUTO;
+
+	$R_BaseWidth = 640.0;
+	$R_BaseHeight = 480.0;
+	$R_ExcludeStatusBar = false;
+
+	$R_X = 0.0;
+	$R_Y = 0.0;
+
+	$R_IScaleX = 1.0;
+	$R_IScaleY = 1.0;
+
+	$R_ShowToEveryone = false;
+
+	$R_AppearTime = 0.0;
+	$R_StayTime = HUD_STAYTIME_FOREVER;
+	$R_DisappearTime = 0.0;
+
+	$R_BlendStyle = HUD_BLENDSTYLE_NORMAL;
+	$R_Alpha = 1.0;
+
+	$R_ShowIn3DView = true;
+	$R_ShowOnFullAutomap = true;
+	$R_ShowOnOverlayAutomap = true;
+
+	$R_Layer = HUDMSG_LAYER_OVERHUD;
+
+	$R_TextOriginX = HUD_TEXTORIGIN_CENTER;
+	$R_TextOriginY = HUD_TEXTORIGIN_CENTER;
+	$R_CenterText = false;
+	$R_TextFont = "SMALLFONT";
+	$R_TextColorIsString = false;
+	$R_TextColor = CR_UNTRANSLATED;
+	$R_TextTypeOn = false;
+	$R_LogMessage = false;
+	$R_TextWordWrap = false;
+}
+
+raw HudStateStack[ACSUTILS_HUDLIB_STACKSIZE];
+
+function void HudClearStateStack(void)
+{
+	$HudStateStackTop = 0;
+}
+
+function void HudPushState(void)
+{
+	HudStateStack[$HudStateStackTop++] = $R_Is3DPoint;
+
+
+	HudStateStack[$HudStateStackTop++] = $R3D_CameraX;
+	HudStateStack[$HudStateStackTop++] = $R3D_CameraY;
+	HudStateStack[$HudStateStackTop++] = $R3D_CameraZ;
+	HudStateStack[$HudStateStackTop++] = $R3D_CameraAngle;
+	HudStateStack[$HudStateStackTop++] = $R3D_CameraPitch;
+
+	HudStateStack[$HudStateStackTop++] = $R3D_X;
+	HudStateStack[$HudStateStackTop++] = $R3D_Y;
+	HudStateStack[$HudStateStackTop++] = $R3D_Z;
+
+	HudStateStack[$HudStateStackTop++] = $R3D_2DOffsetX;
+	HudStateStack[$HudStateStackTop++] = $R3D_2DOffsetY;
+
+	HudStateStack[$HudStateStackTop++] = $R3D_AutoDistanceScale;
+	HudStateStack[$HudStateStackTop++] = $R3D_ProjectionMode;
+
+	HudStateStack[$HudStateStackTop++] = $R_BaseWidth;
+	HudStateStack[$HudStateStackTop++] = $R_BaseHeight;
+	HudStateStack[$HudStateStackTop++] = $R_ExcludeStatusBar;
+
+	HudStateStack[$HudStateStackTop++] = $R_X;
+	HudStateStack[$HudStateStackTop++] = $R_Y;
+
+	HudStateStack[$HudStateStackTop++] = $R_IScaleX;
+	HudStateStack[$HudStateStackTop++] = $R_IScaleY;
+
+	HudStateStack[$HudStateStackTop++] = $R_ShowToEveryone;
+
+	HudStateStack[$HudStateStackTop++] = $R_AppearTime;
+	HudStateStack[$HudStateStackTop++] = $R_StayTime;
+	HudStateStack[$HudStateStackTop++] = $R_DisappearTime;
+
+	HudStateStack[$HudStateStackTop++] = $R_BlendStyle;
+	HudStateStack[$HudStateStackTop++] = $R_Alpha;
+
+	HudStateStack[$HudStateStackTop++] = $R_ShowIn3DView;
+	HudStateStack[$HudStateStackTop++] = $R_ShowOnFullAutomap;
+	HudStateStack[$HudStateStackTop++] = $R_ShowOnOverlayAutomap;
+
+	HudStateStack[$HudStateStackTop++] = $R_Layer;
+
+	HudStateStack[$HudStateStackTop++] = $R_TextOriginX;
+	HudStateStack[$HudStateStackTop++] = $R_TextOriginY;
+	HudStateStack[$HudStateStackTop++] = $R_CenterText;
+	HudStateStack[$HudStateStackTop++] = $R_TextFont;
+	HudStateStack[$HudStateStackTop++] = $R_TextColorIsString;
+	HudStateStack[$HudStateStackTop++] = $R_TextColor;
+	HudStateStack[$HudStateStackTop++] = $R_TextTypeOn;
+	HudStateStack[$HudStateStackTop++] = $R_LogMessage;
+	HudStateStack[$HudStateStackTop++] = $R_TextWordWrap;
+	
+	if ($HudStateStackTop > ACSUTILS_HUDLIB_STACKSIZE)
+		ACSUtils_LimitError("HudPushState(): state stack overflow.");
+}
+
+function void HudPopState(void)
+{
+	if ($HudStateStackTop == 0)
+	{
+		ACSUtils_ProgramError("HudPopState() called with no saved state.");
+		return;
+	}
+
+	$R_TextWordWrap = HudStateStack[--$HudStateStackTop];
+	$R_LogMessage = HudStateStack[--$HudStateStackTop];
+	$R_TextTypeOn = HudStateStack[--$HudStateStackTop];
+	$R_TextColor = HudStateStack[--$HudStateStackTop];
+	$R_TextColorIsString = HudStateStack[--$HudStateStackTop];
+	$R_TextFont = HudStateStack[--$HudStateStackTop];
+	$R_CenterText = HudStateStack[--$HudStateStackTop];
+	$R_TextOriginY = HudStateStack[--$HudStateStackTop];
+	$R_TextOriginX = HudStateStack[--$HudStateStackTop];
+
+	$R_Layer = HudStateStack[--$HudStateStackTop];
+
+	$R_ShowOnOverlayAutomap = HudStateStack[--$HudStateStackTop];
+	$R_ShowOnFullAutomap = HudStateStack[--$HudStateStackTop];
+	$R_ShowIn3DView = HudStateStack[--$HudStateStackTop];
+
+	$R_Alpha = HudStateStack[--$HudStateStackTop];
+	$R_BlendStyle = HudStateStack[--$HudStateStackTop];
+
+	$R_DisappearTime = HudStateStack[--$HudStateStackTop];
+	$R_StayTime = HudStateStack[--$HudStateStackTop];
+	$R_AppearTime = HudStateStack[--$HudStateStackTop];
+
+	$R_ShowToEveryone = HudStateStack[--$HudStateStackTop];
+
+	$R_IScaleY = HudStateStack[--$HudStateStackTop];
+	$R_IScaleX = HudStateStack[--$HudStateStackTop];
+
+	$R_Y = HudStateStack[--$HudStateStackTop];
+	$R_X = HudStateStack[--$HudStateStackTop];
+
+	$R_ExcludeStatusBar = HudStateStack[--$HudStateStackTop];
+	$R_BaseHeight = HudStateStack[--$HudStateStackTop];
+	$R_BaseWidth = HudStateStack[--$HudStateStackTop];
+
+	$R3D_ProjectionMode = HudStateStack[--$HudStateStackTop];
+	$R3D_AutoDistanceScale = HudStateStack[--$HudStateStackTop];
+
+	$R3D_2DOffsetY = HudStateStack[--$HudStateStackTop];
+	$R3D_2DOffsetX = HudStateStack[--$HudStateStackTop];
+
+	$R3D_Z = HudStateStack[--$HudStateStackTop];
+	$R3D_Y = HudStateStack[--$HudStateStackTop];
+	$R3D_X = HudStateStack[--$HudStateStackTop];
+
+	$R3D_CameraPitch = HudStateStack[--$HudStateStackTop];
+	$R3D_CameraAngle = HudStateStack[--$HudStateStackTop];
+	$R3D_CameraZ = HudStateStack[--$HudStateStackTop];
+	$R3D_CameraY = HudStateStack[--$HudStateStackTop];
+	$R3D_CameraX = HudStateStack[--$HudStateStackTop];
+
+
+	$R_Is3DPoint = HudStateStack[--$HudStateStackTop];
+	
+	if ($HudStateStackTop < 0)
+		ACSUtils_ProgramError("HudPushState/HudPopState are bugged. Report this bug to the acsutils project.");
+}
+
+function void HudSetCameraPosition(fixed x, fixed y, fixed z)
+{
+	$R3D_CameraX = x;
+	$R3D_CameraY = y;
+	$R3D_CameraZ = z;
+}
+
+function void HudSetCameraAngles(ang angle, ang pitch)
+{
+	$R3D_CameraAngle = angle;
+	$R3D_CameraPitch = pitch;
+}
+
+function void HudSetCameraVector(fixed x, fixed y, fixed z)
+{
+	VectorToAngles(x, y, z);
+	$R3D_CameraAngle = r1;
+	$R3D_CameraPitch = r2;
+}
+
+
+@const int HUD_CAMERAACTOR_NOPOSITION = 1;
+@const int HUD_CAMERAACTOR_NOPREDICTION = 2;
+@const int HUD_CAMERAACTOR_NODIRECTION = 4;
+@const int HUD_CAMERAACTOR_NOVIEWHEIGHT = 8;
+
+function void HudSetCameraActorAdvanced(int tid, int flags)
+{
+	if (!(flags & HUD_CAMERAACTOR_NOPOSITION))
+	{
+		fixed x = GetActorX(tid);
+		fixed y = GetActorY(tid);
+		fixed z = GetActorZ(tid);
+		
+		if (!(flags & HUD_CAMERAACTOR_NOVIEWHEIGHT))
+			z += GetActorViewHeight(tid);
+		
+		if (!(flags & HUD_CAMERAACTOR_NOPREDICTION))
+		{
+			x -= GetActorVelX(tid);
+			y -= GetActorVelY(tid);
+			z -= GetActorVelZ(tid);
+		}	
+		
+		HudSetCameraPosition(x, y, z);
+	}
+	
+	if (!(flags & HUD_CAMERAACTOR_NODIRECTION))
+		HudSetCameraAngles(GetActorAngle(tid), -GetActorPitch(tid));
+}
+
+function void HudSetCameraActor(int tid)
+{
+	HudSetCameraActorAdvanced(tid, 0);
+}
+
+function void HudSetPoint3D(fixed x, fixed y, fixed z)
+{
+	$R_Is3DPoint = true;
+	$R3D_X = x;
+	$R3D_Y = y;
+	$R3D_Z = z;
+}
+
+function void HudSet2DOffset(fixed x, fixed y)
+{
+	$R3D_2DOffsetX = x;
+	$R3D_2DOffsetY = y;
+}
+
+function void HudSetAutoDistanceScale(bool autoDistanceScale)
+{
+	$R3D_AutoDistanceScale = autoDistanceScale;
+}
+
+function void HudSetProjectionMode(int mode)
+{
+	$R3D_ProjectionMode = mode;
+}
+
+function void HudSetVirtualSize(fixed width, fixed height)
+{
+	$R_BaseWidth = width;
+	$R_BaseHeight = height;
+}
+
+function void HudUseDefaultSize(void)
+{
+	$R_BaseWidth = 640.0;
+	$R_BaseHeight = 480.0;
+}
+
+function void HudUseRealSize(void)
+{
+	$R_BaseWidth = fixed(GetScreenWidth()<<16);
+	$R_BaseHeight = fixed(GetScreenHeight()<<16);
+}
+
+function fixed HudBorderX(void)
+{
+	return HudBorderXFor($R_BaseWidth);
+}
+
+function fixed HudBorderY(void)
+{
+	return HudBorderXFor($R_BaseHeight);
+}
+
+function fixed HudLeft(void)
+{
+	return HudLeftFor($R_BaseWidth);
+}
+
+function fixed HudRight(void)
+{
+	return HudRightFor($R_BaseWidth);
+}
+
+function fixed HudTop(void)
+{
+	return HudTopFor($R_BaseHeight);
+}
+
+function fixed HudBottom(void)
+{
+	return HudBottomFor($R_BaseHeight);
+}
+
+function void HudSetExcludeStatusBar(bool exclude)
+{
+	$R_ExcludeStatusBar = exclude;
+}
+
+function void HudSetPoint(fixed x, fixed y)
+{
+	$R_Is3DPoint = false;
+	$R_X = x;
+	$R_Y = y;
+}
+
+function void HudSetScaleXY(fixed scaleX, fixed scaleY)
+{
+	if (scaleX != 0.0)
+		$R_IScaleX = FixedDiv(1.0, scaleX);
+	else
+		$R_IScaleX = 0.0;
+	
+	if (scaleY != 0.0)
+		$R_IScaleY = FixedDiv(1.0, scaleY);
+	else
+		$R_IScaleY = 0.0;
+}
+
+function void HudSetScale(fixed scale)
+{
+	HudSetScaleXY(scale, scale);
+}
+
+function void HudSetInvScale(fixed invScale)
+{
+	$R_IScaleX = invScale;
+	$R_IScaleY = invScale;
+}
+
+function void HudSetInvScaleXY(fixed invScaleX, fixed invScaleY)
+{
+	$R_IScaleX = invScaleX;
+	$R_IScaleY = invScaleY;
+}
+
+function void HudSetShowToEveryone(bool showToEveryone)
+{
+	$R_ShowToEveryone = showToEveryone;
+}
+
+function void HudSetAppearTime(fixed appearTime)
+{
+	$R_AppearTime = appearTime;
+}
+
+function void HudSetStayTime(fixed stayTime)
+{
+	$R_StayTime = stayTime;
+}
+
+function void HudSetDisappearTime(fixed disappearTime)
+{
+	$R_DisappearTime = disappearTime;
+}
+
+function void HudSetBlendStyle(int style)
+{
+	$R_BlendStyle = style;
+}
+
+function void HudSetAlpha(fixed alpha)
+{
+	$R_Alpha = alpha;
+}
+
+function void HudSetShowIn3DView(bool show)
+{
+	$R_ShowIn3DView = show;
+}
+
+function void HudSetShowOnFullAutomap(bool show)
+{
+	$R_ShowOnFullAutomap = show;
+}
+
+function void HudSetShowOnOverlayAutomap(bool show)
+{
+	$R_ShowOnOverlayAutomap = show;
+}
+
+function void HudSetLayer(int layer)
+{
+	$R_Layer = layer;
+}
+
+function void HudSetFont(str font)
+{
+	$R_TextFont = font;
+}
+
+function void HudSetTextColor(int textColor)
+{
+	$R_TextColorIsString = false;
+	$R_TextColor = textColor;
+}
+
+function void HudSetTextColorString(str textColor)
+{
+	$R_TextColorIsString = true;
+	$R_TextColor = textColor;
+}
+
+function void HudSetCenterText(bool centerText)
+{
+	$R_CenterText = centerText;
+}
+
+function void HudSetTextOrigin(fixed originX, fixed originY)
+{
+	$R_TextOriginX = originX;
+	$R_TextOriginY = originY;
+}
+
+function void HudSetTextOriginX(fixed originX)
+{
+	$R_TextOriginX = originX;
+}
+
+function void HudSetTextOriginY(fixed originY)
+{
+	$R_TextOriginY = originY;
+}
+
+function void HudSetTextTypeOn(bool textTypeOn)
+{
+	$R_TextTypeOn = textTypeOn;
+}
+
+function void HudSetLogMessage(bool logMessage)
+{
+	$R_LogMessage = logMessage;
+}
+
+function void HudSetWordWrap(bool wordWrap)
+{
+	$R_TextWordWrap = wordWrap;
+}
+
+//int $R_RotatedX;
+//int $R_RotatedY;
+//int $R_RotatedZ;
+
+function bool ACSUtils_IsYShearing(void)
+{
+	if ($R3D_ProjectionMode == HUD_PROJECTION_AUTO)
+		return !IsOpenGL();
+	
+	return $R3D_ProjectionMode == HUD_PROJECTION_YSHEARING;
+}
+
+// Rotate 3D point to view coordinate system.
+function void ACSUtils_HudRotate3DPoint(void)
+{
+	// Translated point coordinates.
+	fixed x = $R3D_X - $R3D_CameraX;
+	fixed y = $R3D_Y - $R3D_CameraY;
+	fixed z = $R3D_Z - $R3D_CameraZ;
+
+	fixed rx, ry, rz;
+	fixed s, c;
+
+	// Rotate around Z axis.
+	s = sin(-$R3D_CameraAngle);
+	c = cos(-$R3D_CameraAngle);
+	rx = FixedMul(x, c) - FixedMul(y, s);
+	ry = FixedMul(x, s) + FixedMul(y, c);
+	x = rx; y = ry;
+
+	// Rotate around Y axis.
+	if (!ACSUtils_IsYShearing())
+	{
+		s = sin(-$R3D_CameraPitch);
+		c = cos(-$R3D_CameraPitch);
+		rx = FixedMul(x, c) - FixedMul(z, s);
+		rz = FixedMul(x, s) + FixedMul(z, c);
+		x = rx; z = rz;
+	}
+
+	$R_RotatedX = x;
+	$R_RotatedY = y;
+	$R_RotatedZ = z;
+}
+
+function int HudGetDistance(void)
+{
+	ACSUtils_HudRotate3DPoint();
+	return $R_RotatedX;
+}
+
+
+@const int CAMERA_BASE_DISTANCE = 128;
+
+function void ACSUtils_HudDrawHudMessage(int id, int type, str text, bool isText)
+{
+	if ($R_IScaleX == 0 || $R_IScaleY == 0)
+		return;
+
+	type |= $R_Layer;
+	if (!$R_ShowIn3DView)
+		type |= HUDMSG_NOTWITH3DVIEW;
+	if (!$R_ShowOnFullAutomap)
+		type |= HUDMSG_NOTWITHFULLMAP;
+	if (!$R_ShowOnOverlayAutomap)
+		type |= HUDMSG_NOTWITHOVERLAYMAP;
+	
+	if ($R_BlendStyle == HUD_BLENDSTYLE_ADDITIVE)
+		type |= HUDMSG_ADDBLEND;
+	else if ($R_Alpha != 1.0)
+		type |= HUDMSG_ALPHA;
+
+	fixed x = $R_X;
+	fixed y = $R_Y;
+	fixed iScaleX = $R_IScaleX;
+	fixed iScaleY = $R_IScaleY;
+	
+	if ($R_Is3DPoint)
+	{
+		ACSUtils_HudRotate3DPoint();
+
+		// Check if point is behind the camera.
+		if ($R_RotatedX <= 0)
+		{
+			ClearHudMessage(id);
+			return;
+		}
+			
+		// I don't know what this factor means, but it fixes positioning bugs.
+		fixed yFactor = 1.6;
+		if (StatusBarVisible())
+			yFactor = 1.9;
+
+		// Half heights.
+		fixed hw = $R_BaseWidth / 2.0;
+		fixed hh = $R_BaseHeight / 2.0;		
+
+		// Project point.
+		x = -FixedDiv($R_RotatedY, $R_RotatedX);
+		y = -FixedDiv($R_RotatedZ, $R_RotatedX);
+		
+		if (ACSUtils_IsYShearing())
+			y += tan($R3D_CameraPitch);
+		
+		// Postprocess projected point.
+		x += $R3D_2DOffsetX + hw + FixedMul(hw, x);
+		y += $R3D_2DOffsetY + hh + FixedMul(FixedMul(hh, yFactor), y);
+		
+		if ($R3D_AutoDistanceScale)
+		{
+			iScaleX = FixedMul(iScaleX, $R_RotatedX / CAMERA_BASE_DISTANCE);
+			iScaleY = FixedMul(iScaleY, $R_RotatedX / CAMERA_BASE_DISTANCE);
+		}
+	}
+	
+	fixed w = FixedMul($R_BaseWidth, iScaleX);
+	fixed h = FixedMul($R_BaseHeight, iScaleY);
+	SetHudSize(itrunc(w), itrunc(h), !($R_Is3DPoint || $R_ExcludeStatusBar));
+	
+	x = trunc(FixedMul(x, iScaleX));
+	y = trunc(FixedMul(y, iScaleY));
+	
+	if ($R_TextOriginX == HUD_TEXTORIGIN_LEFT)
+		x += 0.1;
+	else if ($R_TextOriginX == HUD_TEXTORIGIN_RIGHT)
+		x += 0.2;
+		
+	if ($R_TextOriginY == HUD_TEXTORIGIN_TOP)
+		y += 0.1;
+	else if ($R_TextOriginY == HUD_TEXTORIGIN_BOTTOM)
+		y += 0.2;
+		
+	if ($R_CenterText)
+		x += 0.4;
+	
+	// BUG: this really simplifies the code, but the messages will only stay
+	// for 9 hours.
+	fixed stayTime = $R_StayTime;
+	if (stayTime < 0.0)
+		stayTime = FIXED_MAX;
+	
+	if ($R_ShowToEveryone)
+	{
+		HudMessageBold(s:text;
+			type,
+			id,
+			$R_TextColor,
+			x, y,
+			stayTime, $R_AppearTime, $R_DisappearTime,
+			$R_Alpha
+		);
+	}
+	else
+	{
+		HudMessage(s:text;
+			type,
+			id,
+			$R_TextColor,
+			x, y,
+			stayTime, $R_AppearTime, $R_DisappearTime,
+			$R_Alpha
+		);
+	}
+}
+
+function void HudDrawText(int id, str text)
+{
+	int type = HUDMSG_FADEINOUT;
+	if ($R_AppearTime > 0 && $R_TextTypeOn)
+		type = HUDMSG_TYPEON;
+	
+	if ($R_LogMessage)
+		type |= HUDMSG_LOG;
+	if ($R_TextColorIsString)
+		type |= HUDMSG_COLORSTRING;
+	if (!$R_TextWordWrap)
+		type |= HUDMSG_NOWRAP;
+
+	SetFont($R_TextFont);
+	ACSUtils_HudDrawHudMessage(id, type, text, true);
+}
+
+function void HudDrawImage(int id, str image)
+{
+	SetFont(image);
+	ACSUtils_HudDrawHudMessage(id, HUDMSG_FADEINOUT, "A", false);
+}

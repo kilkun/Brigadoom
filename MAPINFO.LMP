@@ -1,0 +1,15 @@
+GameInfo {
+	TitleMusic = ""
+	IntermissionMusic = ""
+	PlayerClasses = "BasePlayer"
+	DefaultDropStyle = 2
+	DefKickBack = 0
+
+	PickupColor = "7F7F7F"
+	DimColor = "7F7F7F"
+	DimAmount = 0.25
+
+	MenuFontColor_Title = "Untranslated"
+	MenuFontColor_Header = "Green"
+	MenuFontColor_Selection = "LightBlue"
+}

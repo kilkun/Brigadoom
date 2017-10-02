@@ -1,0 +1,26 @@
+ACTOR DecoRAM : Inventory { -INVBAR +UNDROPPABLE }
+
+ACTOR DecBool	: DecoRAM { Inventory.MaxAmount 1 }
+ACTOR DecPct	: DecoRAM { Inventory.MaxAmount 100 }
+ACTOR DecByte	: DecoRAM { Inventory.MaxAmount 0xFF }
+ACTOR DecShort	: DecoRAM { Inventory.MaxAmount 0xFFFF }
+ACTOR DecLong	: DecoRAM { Inventory.MaxAmount 0x7FFFFFFF }
+
+ACTOR NullObj	{ Radius 1 Height 1 +NOINTERACTION States { Spawn: Goto NULL } }
+
+ACTOR HitboxMarker : NullObj
+{ +CLIENTSIDEONLY Scale 0.25
+	States { Spawn:
+		PTYL A 350
+		TNT1 A 1
+		Stop
+	}
+}
+
+ACTOR HitboxTrail : HitboxMarker
+{ States { Spawn:
+		PTBL A 25
+		PTBL A 1 A_FadeOut(0.95, TRUE)
+		Wait
+	}
+}

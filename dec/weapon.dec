@@ -1,0 +1,67 @@
+ACTOR BaseWeapon : Weapon{ 
+	//$Category UCOM/weapon
+	//Weapon.SlotNumber 0
+	Weapon.BobStyle Alpha
+	+WEAPON.CHEATNOTWEAPON
+	+WEAPON.NO_AUTO_SWITCH
+	+WEAPON.NOAUTOFIRE
+	+WEAPON.NOAUTOAIM
+	+WEAPON.NOALERT
+	States { 
+	Spawn:
+		TNT1 A -1
+		Stop
+	Select:
+		TNT1 A 1 A_Raise
+		Loop
+	Deselect:
+		TNT1 A 1 A_Lower
+		Loop
+	Ready:
+		TNT1 A 1 A_WeaponReady(WRF_ALLOWRELOAD | WRF_ALLOWZOOM)
+		Loop
+
+	Fire: AltFire: Reload: Zoom:
+		TNT1 A 35
+		Goto Ready
+
+	Flash: AltFlash:
+		TNT1 A 1
+		Stop
+	}
+}
+
+ACTOR NullWep : BaseWeapon{ 
+	States { 
+	Ready:
+		TNT1 A 1 A_WeaponReady(WRF_DISABLESWITCH)
+		Loop
+	}
+}
+
+ACTOR Mech : BaseWeapon{
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.ALT_AMMO_OPTIONAL
+	States{
+	Ready:
+		TNT1 A 1 A_WeaponReady(WRF_DISABLESWITCH)
+		Loop
+		
+	}
+}
+
+ACTOR BaseProj : FastProjectile{ 
+	Height 1 Radius 1 Scale 0.25
+	DamageType Script Damage 0
+	Speed 0x20 Mass 1
+	States { Spawn:
+		PTWH A -1
+		Stop
+
+	Crash: Death: XDeath:
+		Goto Null
+	}
+}
+
+#include "dec/wep/ammo.dec"
+#include "dec/wep/bullet.dec"

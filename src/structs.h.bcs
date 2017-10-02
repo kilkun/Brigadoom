@@ -1,0 +1,12 @@
+#include "zcommon.h"
+
+//All datums are located here
+
+//Weapons
+#include "weapons.bcs"
+
+//Vehicles
+#include "vehicles.bcs"
+
+//Pilots
+//#include "pilots.bcs"

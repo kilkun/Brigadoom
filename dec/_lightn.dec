@@ -1,0 +1,36 @@
+ACTOR LightNode : NullObj { +CLIENTSIDEONLY }
+
+ACTOR Light32 : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("Light32GL") NoDelay
+		Stop
+	}
+}
+
+ACTOR Light64 : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("Light64GL") NoDelay
+		Stop
+	}
+}
+
+ACTOR Light128 : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("Light128GL") NoDelay
+		Stop
+	}
+}
+
+ACTOR Light192 : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("Light192GL") NoDelay
+		Stop
+	}
+}
+
+ACTOR Light256 : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("Light256GL") NoDelay
+		Stop
+	}
+}

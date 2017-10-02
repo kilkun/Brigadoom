@@ -1,0 +1,177 @@
+int menustage = 0;
+int menupos = 0;
+int menusize;
+bool menuactive;
+
+function void DrawWeaponMenu(str menutitle, Weapon_T&[]& weaplist){
+	foreach(let int i; let Weapon_T& weapon_; weaplist){
+		menusize = i;
+	}
+	int scrx = GetScreenWidth();
+	int scry = GetScreenHeight();
+	
+	HudSetTextColor(CR_WHITE);
+	HudSetVirtualSize(320,200);			
+	HudSetScale(1);
+	HudSetPoint(HudLeft(),HudTop());			
+	HudDrawImage(500,"MENUBGPH");
+	HudSetVirtualSize(scrx/2,scry/2);
+	HudSetScale(1);
+	HudSetTextOrigin(HUD_TEXTORIGIN_CENTER,HUD_TEXTORIGIN_TOP);
+	HudSetPoint(scrx/4,HudTop());
+	HudDrawText(200,menutitle);
+	HudSetVirtualSize(scrx,scry);
+	HudSetScale(1);
+	HudSetTextOrigin(HUD_TEXTORIGIN_LEFT,HUD_TEXTORIGIN_TOP);
+	Foreach(let int i; let Weapon_T& weapon; weaplist){
+		HudSetPoint(HudLeft(),HudTop() + 50 + 30*i);
+		if(i==menupos){
+			HudSetTextColor(CR_RED);
+		}
+		HudDrawText(i+1, StrParam(s:"* ", s:weapon.name));
+		HudSetTextColor(CR_WHITE);
+	}
+}
+
+function void DrawVehicleMenu(Vehicle_T&[]& vehiclist){
+	foreach(let int i; let Vehicle_T& vehicle_; vehiclist){
+		menusize = i;
+	}
+	int scrx = GetScreenWidth();
+	int scry = GetScreenHeight();
+	HudSetTextColor(CR_WHITE);
+			HudSetVirtualSize(320,200);			
+			HudSetScale(1);
+			HudSetPoint(HudLeft(),HudTop());			
+			HudDrawImage(500,"MENUBGPH");
+			HudSetVirtualSize(scrx/2,scry/2);
+			HudSetScale(1);
+			HudSetTextOrigin(HUD_TEXTORIGIN_CENTER,HUD_TEXTORIGIN_TOP);
+			HudSetPoint(scrx/4,HudTop());
+			HudDrawText(200,"Primary");
+			HudSetVirtualSize(scrx,scry);
+			HudSetScale(1);
+			HudSetTextOrigin(HUD_TEXTORIGIN_LEFT,HUD_TEXTORIGIN_TOP);
+			Foreach(let int i; let Vehicle_T& vehicle; vehiclist){
+				HudSetPoint(HudLeft(),HudTop() + 50 + 30*i);
+				if(i==menupos){
+					HudSetTextColor(CR_RED);
+				}
+				HudDrawText(i+1, StrParam(s:"* ", s:vehicle.name));
+				HudSetTextColor(CR_WHITE);
+			}
+}
+
+SCRIPT "StartingMenu" (void) ENTER {
+	int scry = GetScreenHeight();
+	int scrx = GetScreenWidth();
+	SetPlayerProperty(0, TRUE, PROP_TOTALLYFROZEN);
+	menuactive = TRUE;
+	
+	while (true) {
+	while(menuactive){
+		
+		HudSetVirtualSize(scrx,scry);
+		HudSetScale(1);
+		HudSetTextOrigin(HUD_TEXTORIGIN_RIGHT,HUD_TEXTORIGIN_BOTTOM);
+		HudSetPoint(HudRight(),HudBottom());
+		HudDrawText(100,StrParam(s:"Menu Length: ", d:menusize));
+		HudSetPoint(HudRight(),HudBottom()-30);
+		HudDrawText(101,StrParam(s:"Menu State: ",d:menustage));
+		HudSetTextColor(CR_WHITE);
+		
+		int btn = GetPlayerInput(-1, INPUT_BUTTONS);		
+		if(menustage < 3){
+			if(btn == BT_FORWARD){
+				
+				if(menupos-1>=0){
+					menupos--;
+					delay(3);
+				}else{
+					menupos = menusize;
+					delay(3);
+				}
+				
+			}else if(btn == BT_BACK){
+				
+				if((menupos+1)<=menusize){
+					menupos++;					
+					delay(3);
+				}else{
+					menupos = 0;
+					delay(3);
+				}
+				
+			}
+			if(btn == BT_MOVERIGHT){
+				switch(menustage){
+				case 0:
+					Vehicle = LoyalistV[menupos];
+					SetActorProperty(0, APROP_ViewHeight, Vehicle.viewheight << 16);
+					break;					
+				case 1:
+					PrimaryWeapon = weaponlist[Vehicle.weapon1size][menupos];
+					break;
+				case 2:
+					SecondaryWeapon = weaponlist[Vehicle.weapon2size][menupos];
+					break;
+				}
+				
+				menupos = 0;
+				menustage++;
+				menustage = clamp(menustage,0,3);
+				delay(3);
+				
+			}else if(btn == BT_MOVELEFT){
+				menustage--;
+				menustage = clamp(menustage,0,3);
+				delay(3);
+			}
+		}
+		HudPushState();
+		HudResetState();
+		
+		switch(menustage){
+		case 0:
+			DrawVehicleMenu(LoyalistV);
+			delay(1);
+			break;
+		
+		
+		case 1:
+			DrawWeaponMenu("Primary",weaponlist[Vehicle.weapon1size]);
+			delay(1);
+			break;
+			
+		case 2:
+			DrawWeaponMenu("Secondary",weaponlist[Vehicle.weapon2size]);
+			delay(1);
+			break;
+		
+		case 3:
+			HudSetTextColor(CR_WHITE);
+			HudSetVirtualSize(320,200);			
+			HudSetScale(1);
+			HudSetPoint(HudLeft(),HudTop());			
+			ClearHudMessage(500);
+			HudSetVirtualSize(scrx/2,scry/2);
+			HudSetScale(1);
+			HudSetTextOrigin(HUD_TEXTORIGIN_CENTER,HUD_TEXTORIGIN_TOP);
+			HudSetPoint(scrx/4,HudTop());
+			HudDrawText(200,"");
+			HudDrawText(100,"");
+			HudDrawText(101,"");
+			Foreach(let int i; let Weapon_T& weapon; weaponlist[Vehicle.weapon2size]){
+				ClearHudMessage(i+1);
+			}
+			SetPlayerProperty(0, FALSE, PROP_TOTALLYFROZEN);
+			menuactive = FALSE;
+			break;
+		}
+		HudPopState();
+		}
+		
+	delay(1);}
+}
+
+//hrem

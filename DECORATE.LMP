@@ -1,0 +1,6 @@
+#include "dec/_common.dec"
+#include "dec/_lightn.dec"
+#include "dec/_scape.dec"
+
+#include "dec/unit.dec"
+#include "dec/weapon.dec"

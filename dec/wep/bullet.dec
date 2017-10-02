@@ -1,0 +1,113 @@
+/*TODO:	load ballistic weapon logic into base class
+		keep animation in preexisting weapon dec
+	debug frames:
+		"####" A 1 A_SpawnItemEx("HitboxTrail", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION)
+		"####" A 1 A_SpawnItemEx("HitboxMarker", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION)
+*/
+
+ACTOR WPBF_CHAMBER : DecBool {}
+ACTOR WPBF_MAGLOAD : DecBool {}
+ACTOR WPBF_JAMMING : DecBool {}
+ACTOR WPBF_MISFIRE : DecBool {}
+
+ACTOR BaseBulletWeapon : BaseWeapon
+{ //$Category UCOM/weapon/bullet
+	Decal "BulletChip"
+	Weapon.AmmoGive 0
+	Weapon.AmmoUse 0
+	Weapon.AmmoType1 "Clip"
+	Weapon.AmmoType2 "Clip"
+	-WEAPON.NOALERT
+}
+
+ACTOR BulletHits : Inventory { Inventory.MaxAmount 3 }
+ACTOR BaseBullet : BaseProj
+{ SeeSound "weapons/spurhigh"
+	Speed 0xA0 Mass 0xA0 DamageType Bullet
+	+BLOODSPLATTER +HITTARGET
+	Health 1 Stamina 1
+	States { 
+	Spawn:
+		PTWH A 0 NoDelay
+		"####" A 1 A_GiveInventory("BulletHits", health)
+	See:
+		"####" A 1 //A_SpawnItemEx("HitboxTrail", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION)
+		Wait
+
+	XDeath:// "####" A 1 CallACS("calc_hit", 0, (health * stamina) * 2, MOB_DMG_BRUTE, MOB_LOC_LMB | MOB_LOC_ORG)
+		"####" A 0 ACS_NamedExecuteAlways("BulletDied", 0, Stamina, Health, ReactionTime)
+		Stop
+
+	Crash: Death:
+		TNT1 A 1 A_SpawnItemEx("BulletPuff", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+//													ShieldDamage   Hull Damage  Structure damage?
+ACTOR 8Bullet	: BaseBullet { Speed 0x60 Mass 0x60 Health 5 Stamina 5 ReactionTime 5 }
+ACTOR 50Bullet	: BaseBullet { Speed 0x60 Mass 0x80 Health 7 Stamina 15 ReactionTime 10 }
+ACTOR 84Rocket	: BaseBullet { Speed 0x80 Mass 0xB0 Health 1 Stamina 80 ReactionTime 15
+	States { 
+	Spawn:
+		PTMG A 0 NoDelay
+		"####" A 1 A_GiveInventory("BulletHits", health)
+	}
+}
+ACTOR 37Shell	: 84Rocket { Speed 0x90 Mass 0x95 Health 40 Stamina 60 ReactionTime 50 }
+
+ACTOR EntryWound : BloodSplatter
+{ +CLIENTSIDEONLY States { Spawn:
+		TNT1 AAAA 0 NoDelay A_SpawnItemEx("HumanBloodParticle", 0, 0, 0,
+			frandom(-2.0, 2.0), frandom(-1.0, 1.0), frandom(-1.0, 1.0),
+			angle, SXF_ABSOLUTEANGLE | SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+ACTOR ExitWound : BloodSplatter
+{ +CLIENTSIDEONLY States { Spawn:
+		TNT1 AAAA 0 NoDelay A_SpawnItemEx("HumanBloodParticle", 0, 0, 0,
+			frandom(2.0, 8.0), frandom(-1.0, 1.0), frandom(-1.0, 1.0),
+			angle, SXF_ABSOLUTEANGLE | SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+ACTOR MuzzleFlash : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("MFlash128GL") NoDelay
+		TNT1 A 0 A_SpawnItemEx("MFlashNode", 128, 0, 32)
+		TNT1 A 0 A_SpawnItemEx("MFlashNode", 256, 0, 32)
+		TNT1 A 0 A_SpawnItemEx("MFlashNode", 384, 0, 32)
+		TNT1 A 0 A_SpawnItemEx("MFlashNode", 512, 0, 32)
+		TNT1 A 0 A_SpawnItemEx("MFlashNode", 640, 0, 32)
+		Stop
+	}
+}
+
+ACTOR MFlashNode : LightNode
+{ States { Spawn:
+		TNT1 A 1 Light("MFlash96GL") NoDelay
+		Stop
+	}
+}
+
+ACTOR LaserDotTracer : BaseProj{
+	Speed 0 
+	Mass 0
+	States{
+		Spawn:
+			TNT1 A 1
+			Loop
+		Crash: Death: XDeath:
+			PTMG A 2
+			Stop
+	}
+}
+//#include "dec/wep/bullet/pistol.dec"
+//#include "dec/wep/bullet/shotgun.dec"
+//#include "dec/wep/bullet/submachine.dec"
+//#include "dec/wep/bullet/rifle.dec"
+
+//#include "dec/wep/bullet/nagant.dec"

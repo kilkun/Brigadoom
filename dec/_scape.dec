@@ -1,0 +1,26 @@
+ACTOR MarsScape 15000
+{ Height 256 Radius 128 Scale 2.0
+	Mass 0xFFFF Projectile
+	States { Spawn:
+		MARS A -1
+		Stop
+	}
+}
+
+ACTOR PhobosScape 15001
+{ Height 192 Radius 96 Scale 2.0
+	Mass 0xFFF Projectile
+	States { Spawn:
+		MARS B -1
+		Stop
+	}
+}
+
+ACTOR DeimosScape 15002
+{ Height 128 Radius 64 Scale 2.0
+	Mass 0xFF Projectile
+	States { Spawn:
+		MARS C -1
+		Stop
+	}
+}

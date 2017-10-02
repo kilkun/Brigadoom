@@ -1,0 +1,141 @@
+#include "zcommon.h"
+#include "bcsutils.bcs"
+#include "structs.h"
+#include "menu.bcs"
+using BCSUtils;
+
+Weapon_T& PrimaryWeapon = Nullweapon;
+Weapon_T& SecondaryWeapon = Nullweapon;
+Vehicle_T& Vehicle = Nullvehicle;
+function void SetInventory(str item, int amount)
+{
+	int diff = amount - CheckInventory(item);
+	if (diff > 0)
+		GiveInventory(item, diff);
+	else if (diff < 0)
+		TakeInventory(item, -diff);
+}
+
+function int AddToAngle(int angle, int addition)
+{
+	angle = angle >> 8;
+    if(angle+addition > 255){
+		return (angle + addition - 256) << 8;
+	}else if(angle+addition < 0){
+		return (angle + addition + 256) << 8;
+	}else{
+		return (angle+addition) << 8;
+	}
+}
+
+SCRIPT "test" (raw input){
+
+	log(s:"Lorem Ipsum");
+}
+function int testshit(Weapon_T& weapon){
+	log(s:weapon.name);
+	return 1;
+}
+
+SCRIPT "main" (void) ENTER
+{ //delay(35); hopefully this breaks nothing
+	Weapon_T& MyPrimary = Nullweapon;
+	int PlayerX = GetActorX(0);
+	int PlayerY = GetActorY(0);
+	int PlayerZ = GetActorZ(0);
+	int MuzzleHeight = PlayerZ + (36 << 16);
+	
+	int Muzzle1X;	
+	int Muzzle1Y;
+	int Muzzle2X;	
+	int Muzzle2Y;
+	int PureAngle;
+	
+	Thing_ChangeTID(0, 100+PlayerNumber());
+	PrimaryWeapon = Bonesaw;
+	SecondaryWeapon = Carlos;
+	
+	SetInventory("AutoGun", 1000);
+	SetInventory(SecondaryWeapon.ammotype, SecondaryWeapon.maxammo);
+	
+	Spawn("Muzzle",
+	PlayerX, PlayerY, MuzzleHeight, 
+	200+PlayerNumber());
+	
+	Spawn("Muzzle",
+	PlayerX, PlayerY, MuzzleHeight,
+	400+PlayerNumber());
+	
+	
+	SetFont("BIGFONT");
+	while (true) {
+		PureAngle = FixedDiv(FixedMul(GetActorAngle(0), 360<<8), 256<<8);
+		Muzzle1X = GetActorX(0) + FixedMul(30 << 16, Cos(AddToAngle(GetActorAngle(0), Vehicle.muzzleangle)));
+		Muzzle1Y = GetActorY(0) + FixedMul(30 << 16, Sin(AddToAngle(GetActorAngle(0), Vehicle.muzzleangle)));
+		Muzzle2X = GetActorX(0) + FixedMul(25 << 16, Cos(AddToAngle(GetActorAngle(0), -Vehicle.muzzleangle)));
+		Muzzle2Y = GetActorY(0) + FixedMul(25 << 16, Sin(AddToAngle(GetActorAngle(0), -Vehicle.muzzleangle)));
+
+		SetActorPosition(200+PlayerNumber(), Muzzle1X, Muzzle1Y, GetActorZ(0) + (Vehicle.muzzleheight << 16), 0);
+		SetActorPosition(400+PlayerNumber(), Muzzle2X, Muzzle2Y, GetActorZ(0) + (Vehicle.muzzleheight << 16), 0);
+	delay(1); }
+}
+
+
+
+
+SCRIPT "PlayerWeaponController" (void) ENTER {
+	while (true) {
+		int btn = GetPlayerInput(-1, INPUT_BUTTONS);		
+		if(btn == (BT_ATTACK|BT_ALTATTACK)){
+			ACS_NamedExecute("PrimaryFire",0);
+			ACS_NamedExecute("SecondaryFire",0);
+		}else if(btn & BT_ALTATTACK){
+			ACS_NamedExecute("SecondaryFire",0);
+		}else if(btn & BT_ATTACK){
+			ACS_NamedExecute("PrimaryFire",0);			
+		}
+		
+	delay(1);}
+}
+SCRIPT "PlayerLaserSight" (void) ENTER{
+	while(true) {
+		int fireangle = GetActorAngle(0) >> 8;
+		int vspeed = -sin(GetActorPitch(0)) * 128 >> 16;
+		SpawnProjectile(400+PlayerNumber(), "LaserDotTracer", fireangle, 300, vspeed, 0, 0);
+		SpawnProjectile(200+PlayerNumber(), "LaserDotTracer", fireangle, 300, vspeed, 0, 0);
+	delay(6);}
+}
+
+SCRIPT "PrimaryFire" (void) {
+
+	int fireangle = GetActorAngle(0) >> 8;
+	int vspeed = -sin(GetActorPitch(0)) * 128 >> 16;
+	SpawnProjectile(200+PlayerNumber(), 
+	PrimaryWeapon.round, fireangle + random(-PrimaryWeapon.spread,PrimaryWeapon.spread), PrimaryWeapon.speed, vspeed + random(-SecondaryWeapon.spread,SecondaryWeapon.spread), 1, 0);
+	
+	
+	TakeInventory(PrimaryWeapon.AmmoType, 1);
+	Delay(PrimaryWeapon.reload);
+	
+}
+
+SCRIPT "SecondaryFire" (void) {
+	
+	int fireangle = GetActorAngle(0) >> 8;
+	int vspeed = -sin(GetActorPitch(0)) * 128 >> 16;
+	SpawnProjectile(400+PlayerNumber(), 
+	SecondaryWeapon.round, fireangle + random(-SecondaryWeapon.spread,SecondaryWeapon.spread), SecondaryWeapon.speed, vspeed + random(-SecondaryWeapon.spread,SecondaryWeapon.spread) , 1, 0);
+	
+	
+	TakeInventory(SecondaryWeapon.AmmoType, 1);
+	Delay(SecondaryWeapon.reload);
+}
+
+SCRIPT "BulletDied" (int HullDamage, int ShieldDamage, int StructureDamage){
+	
+}
+
+SCRIPT 1 (int height){
+	SetActorProperty(0,APROP_ViewHeight,height);
+	log(s:"Success");
+}

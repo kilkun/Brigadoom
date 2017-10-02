@@ -1,0 +1,68 @@
+#include "zcommon.h"
+//Vehicle structs
+private Vehicle_T& LoyalistV[2] = {Mongoose, Fork};
+
+struct Vehicle_T{
+	str name;
+	int viewheight;
+	int weapon1size;
+	int weapon2size;
+	Weapon_T& weaponslot1;
+	Weapon_T& weaponslot2;
+	int muzzleheight;
+	int muzzleangle;//will have to seperate these later!
+	int movespeed;
+	int turnspeed;
+	int health;
+	int maxshields;
+	int maxovercharge;
+};
+
+private Vehicle_T Nullvehicle = {
+	"None",
+	0,
+	0,
+	0,
+	NullWeapon,
+	NullWeapon,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
+};
+
+private Vehicle_T Mongoose = {
+	"Mongoose",
+	56,
+	1,
+	1,
+	NullWeapon,
+	NullWeapon,
+	36,
+	64,
+	0.50 << 16,
+	0.80 << 16,
+	100,
+	50,
+	25
+	
+};
+
+private Vehicle_T Fork = {
+	"Fork",
+	70,
+	2,
+	2,
+	NullWeapon,
+	NullWeapon,
+	85,
+	64,
+	0.90 << 16,
+	0.80 << 16,
+	100,
+	100,
+	30
+};

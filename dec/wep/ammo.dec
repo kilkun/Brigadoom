@@ -1,0 +1,40 @@
+ACTOR AutoGun	: DecShort { }
+ACTOR Cannon	: DecShort { }
+//add other ammo types later
+
+
+
+/*=========*/
+/* CASINGS */
+/*=========*/
+
+ACTOR ConstAmmoCasing {
+	Projectile -NOGRAVITY
+	Scale 0.5 Height 1 Radius 1 Mass 1
+	States { Spawn: Goto Null
+	Crash: Death: XDeath:
+		"----" A -1
+		Stop
+	}
+}
+
+ACTOR SmallCasing : ConstAmmoCasing
+{ States { Spawn:
+		CAS1 ABCD 1
+		Loop
+	}
+}
+
+ACTOR LargeCasing : ConstAmmoCasing
+{ States { Spawn:
+		CAS2 ABCDEFGH 1
+		Loop
+	}
+}
+
+ACTOR ShellCasing : ConstAmmoCasing
+{ States { Spawn:
+		CAS3 ABCDEFGH 1
+		Loop
+	}
+}
