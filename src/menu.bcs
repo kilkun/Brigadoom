@@ -63,6 +63,7 @@ function void DrawVehicleMenu(Vehicle_T&[]& vehiclist){
 }
 
 SCRIPT "StartingMenu" (void) ENTER {
+	log(s:"Test");
 	int scry = GetScreenHeight();
 	int scrx = GetScreenWidth();
 	SetPlayerProperty(0, TRUE, PROP_TOTALLYFROZEN);

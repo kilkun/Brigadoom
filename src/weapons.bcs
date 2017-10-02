@@ -1,7 +1,7 @@
 #include "zcommon.h"
 //Weapon structs
 
-private Weapon_T& weaponlist[4][2] = {{NullWeapon, NullWeapon},
+private Weapon_T& weaponlist[][] = {{NullWeapon, NullWeapon},
 //small
 {Bonesaw, Carlos},
 //turret
@@ -26,84 +26,140 @@ struct Weapon_T{
 };
 
 private Weapon_T NullWeapon = {
+//name
 	"Null",
+//ammotype
 	"AutoGun",
+//round
 	"BaseBullet",
+//size
 	"Null",
+//reload
 	0,
+//spread
 	0,
+//maxammo
 	0,
+//speed
 	0
 };
 
 //small
 
 private Weapon_T Bonesaw = {
+//name
 	"Bonesaw 8mm Machine Gun",
+//ammotype
 	"AutoGun",
+//round
 	"8Bullet",
+//size
 	"Small",
+//reload
 	1,
+//spread
 	3,
+//maxammo
 	1000,
+//speed
 	160
 
 };
 
 private Weapon_T Carlos = {
+//name
 	"Carlos 84mm AT Rocket",
+//ammotype
 	"Cannon",
+//round
 	"84Rocket",
+//size
 	"Small",
+//reload
 	100,
+//spread
 	1,
+//maxammo
 	40,
+//speed
 	250
 };
 
 //turret
 
 private Weapon_T Fifty = {
+//name
 	"Mae Dois 12.7mm Machine Gun",
+//ammotype
 	"AutoGun",
+//round
 	"50Bullet",
+//size
 	"Turret",
+//reload
 	7,
-	3,
+//spread
+	2,
+//maxammo
 	800,
+//speed
 	160
 
 };
 
 private Weapon_T Confessor = {
+//name
 	"Confessor 37mm Cannon",
+//ammotype
 	"Cannon",
+//round
 	"37Shell",
+//size
 	"Turret",
+//reload
 	90,
+//spread
 	0,
+//maxammo
 	40,
+//speed
 	280
 };
 
 private Weapon_T Belter = {
+//name
 	"Confessor 37mm Cannon",
+//ammotype
 	"Cannon",
+//round
 	"37Cannon",
+//size
 	"Turret",
+//reload
 	90,
+//spread
 	0,
+//maxammo
 	40,
+//speed
 	280
 };
 
 private Weapon_T Preacher = {
+//name
 	"Confessor 37mm Cannon",
+//ammotype
 	"Cannon",
+//round
 	"37Cannon",
+//size
 	"Turret",
+//reload
 	90,
+//spread
 	0,
+//maxammo
 	40,
+//speed
 	280
 };

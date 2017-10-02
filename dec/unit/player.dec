@@ -11,31 +11,8 @@ ACTOR BasePlayer : DoomPlayer
 	Player.MaxHealth 200
 	Player.RunHealth 50
 
-	Player.UseRange 48
-	Player.AttackZOffset 18
-	Player.ForwardMove 0.66, 0.66
-	Player.SideMove 0.66, 0.66
-	
-
 
 	+FORCEXYBILLBOARD
-}
-
-ACTOR Mongoose : BasePlayer {
-	Height 56 Radius 10
-	Health 200
-	Player.ViewHeight 56
-	var int User_Shields;
-	var int User_Overcharge;
-}
-
-ACTOR Fork : BasePlayer {
-	Height 80 Radius 14
-	Health 200
-	Player.ViewHeight 75
-	var int User_Shields;
-	var int User_Overcharge;
-	
 }
 
 Muzzle{

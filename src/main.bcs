@@ -7,14 +7,7 @@ using BCSUtils;
 Weapon_T& PrimaryWeapon = Nullweapon;
 Weapon_T& SecondaryWeapon = Nullweapon;
 Vehicle_T& Vehicle = Nullvehicle;
-function void SetInventory(str item, int amount)
-{
-	int diff = amount - CheckInventory(item);
-	if (diff > 0)
-		GiveInventory(item, diff);
-	else if (diff < 0)
-		TakeInventory(item, -diff);
-}
+
 
 function int AddToAngle(int angle, int addition)
 {
@@ -28,18 +21,10 @@ function int AddToAngle(int angle, int addition)
 	}
 }
 
-SCRIPT "test" (raw input){
-
-	log(s:"Lorem Ipsum");
-}
-function int testshit(Weapon_T& weapon){
-	log(s:weapon.name);
-	return 1;
-}
-
 SCRIPT "main" (void) ENTER
-{ //delay(35); hopefully this breaks nothing
+{
 	Weapon_T& MyPrimary = Nullweapon;
+	Weapon_T& MySecondary = Nullweapon;
 	int PlayerX = GetActorX(0);
 	int PlayerY = GetActorY(0);
 	int PlayerZ = GetActorZ(0);
@@ -110,8 +95,12 @@ SCRIPT "PrimaryFire" (void) {
 
 	int fireangle = GetActorAngle(0) >> 8;
 	int vspeed = -sin(GetActorPitch(0)) * 128 >> 16;
+	
+	
 	SpawnProjectile(200+PlayerNumber(), 
-	PrimaryWeapon.round, fireangle + random(-PrimaryWeapon.spread,PrimaryWeapon.spread), PrimaryWeapon.speed, vspeed + random(-SecondaryWeapon.spread,SecondaryWeapon.spread), 1, 0);
+	PrimaryWeapon.round, fireangle + random(-PrimaryWeapon.spread,PrimaryWeapon.spread), 
+	PrimaryWeapon.speed, vspeed + random(-PrimaryWeapon.spread,PrimaryWeapon.spread), 
+	1, 0);
 	
 	
 	TakeInventory(PrimaryWeapon.AmmoType, 1);
