@@ -1,22 +1,72 @@
-#include "zcommon.h"
 //Vehicle structs
-private Vehicle_T& LoyalistV[2] = {Mongoose, Fork};
 
-struct Vehicle_T{
+private Vehicle_T& LoyalistV[2] = {Mongoose1, Fritz1};
+
+struct Vehicle_T{//defunct
 	str name;
-	int viewheight;
+	fixed viewheight;
 	int weapon1size;
 	int weapon2size;
 	Weapon_T& weaponslot1;
 	Weapon_T& weaponslot2;
 	int muzzleheight;
 	int muzzleangle;//will have to seperate these later!
-	int movespeed;
-	int turnspeed;
+	fixed movespeed;
+	fixed turnspeed;
 	int health;
 	int maxshields;
 	int maxovercharge;
 };
+
+
+private xVehicle_T& Mongoose ={
+	//str name;
+	"Mongoose",
+	//int type;
+	MECH,
+	//str step_sound;
+	"",
+	//int sound_radius;
+	0,
+	//int melee_damage;
+	0,
+	//int melee_radius;
+	0,
+	//fixed knockback_scale;
+	0,
+	//fixed directionaldamage[front, side, rear];
+	{1.0, 1.2, 1.5},
+	//int health;
+	100,
+	//int shields;
+	100,
+	//int overcharge;
+	100,
+	//int overcharge_bleed
+	5,
+	//fixed cameradata[3][3];
+	//FORMAT:
+	//(FRONT: {X, Y, Z}, SIDE: {X, Y, Z}, REAR: {X, Y, Z})
+	{{5.0, 0.0, 60.0}, {5.0, 0.0, 60.0}, {5.0, 0.0, 60.0}},
+	//str hud_bg;
+	"",
+	//fixed movement_data[4][2];
+	//FORMAT:
+	//Acceleration is a fraction, 0 to 1. 1 indicates instant max speed.
+	//Damping is decceleration, linear affects movement, angular affects rotation.
+	//(FORWARD: {speed, accel}, SIDE: {speed, accel}, REVERSE: {speed, accel}, DAMPING: {linear, angular})
+	{{6.5,0.4},{0,0}},
+	//int rotation_speed;
+	30,
+	//int turret_rotation_width;
+	180,
+	//int turret_rotation_speed;
+	30,
+	//Mount_T& Mounts[Mount1, Mount2];
+	{{1,0,10,40,0,0,45,45},{1,0,10,40,0,0,45,45}}
+	//str actors[2]; this is where our decorate actors for upper and lower go	
+};
+
 
 private Vehicle_T Nullvehicle = {
 	"None",
@@ -34,34 +84,34 @@ private Vehicle_T Nullvehicle = {
 	0
 };
 
-private Vehicle_T Mongoose = {
+private Vehicle_T Mongoose1 = {
 	"Mongoose",
-	56,
+	56.0,
 	1,
 	1,
 	NullWeapon,
 	NullWeapon,
 	36,
 	64,
-	0.50 << 16,
-	0.80 << 16,
+	0.50,
+	0.80,
 	100,
 	50,
 	25
 	
 };
 
-private Vehicle_T Fork = {
-	"Fork",
-	70,
+private Vehicle_T Fritz1 = {
+	"Fritz",
+	70.0,
 	2,
 	2,
 	NullWeapon,
 	NullWeapon,
 	85,
 	64,
-	0.90 << 16,
-	0.80 << 16,
+	0.90,
+	0.80,
 	100,
 	100,
 	30

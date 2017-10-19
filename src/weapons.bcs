@@ -26,21 +26,13 @@ struct Weapon_T{
 };
 
 private Weapon_T NullWeapon = {
-//name
 	"Null",
-//ammotype
 	"AutoGun",
-//round
 	"BaseBullet",
-//size
 	"Null",
-//reload
 	0,
-//spread
 	0,
-//maxammo
 	0,
-//speed
 	0
 };
 
@@ -78,7 +70,7 @@ private Weapon_T Carlos = {
 //reload
 	100,
 //spread
-	1,
+	0,
 //maxammo
 	40,
 //speed
@@ -128,7 +120,7 @@ private Weapon_T Confessor = {
 
 private Weapon_T Belter = {
 //name
-	"Confessor 37mm Cannon",
+	"Belter 20mm Chaingun",
 //ammotype
 	"Cannon",
 //round
@@ -136,13 +128,13 @@ private Weapon_T Belter = {
 //size
 	"Turret",
 //reload
-	90,
+	3,
 //spread
-	0,
+	2,
 //maxammo
-	40,
+	800,
 //speed
-	280
+	140
 };
 
 private Weapon_T Preacher = {
@@ -163,3 +155,37 @@ private Weapon_T Preacher = {
 //speed
 	280
 };
+
+
+private xWeapon_T& xBonesaw = {
+	//str name;
+	"Bonesaw",
+	//str ammotype;
+	"Autogun",
+	//str round;
+	"8Bullet",
+	//int burst_count;
+	3,
+	//int burst_reload;
+	1,
+	//int reload;
+	0,
+	//int accuracy_cone_width; (degrees)
+	1,
+	//int maxammo;
+	1800,
+	//int speed;
+	160,
+	//int recoil;
+	0,
+	//int ammo_replenish;
+	200,
+	//str firesound;
+	"",
+	//int soundradius;
+	0
+	//str model; unused for now
+	
+};
+
+

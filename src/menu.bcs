@@ -108,7 +108,7 @@ SCRIPT "StartingMenu" (void) ENTER {
 				switch(menustage){
 				case 0:
 					Vehicle = LoyalistV[menupos];
-					SetActorProperty(0, APROP_ViewHeight, Vehicle.viewheight << 16);
+					SetActorProperty(0, APROP_ViewHeight, Vehicle.viewheight);
 					break;					
 				case 1:
 					PrimaryWeapon = weaponlist[Vehicle.weapon1size][menupos];

@@ -1,0 +1,12 @@
+Model 37Shell
+{
+	
+	Path "models"
+	Model 0 "test.md3"
+	Path "textures"
+	Skin 0 "test.png"
+	Scale 1 1 1.2
+	PITCHFROMMOMENTUM
+	
+	FrameIndex BDSH A 0 0
+}

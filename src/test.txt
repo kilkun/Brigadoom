@@ -1,0 +1,21 @@
+struct Weapon_T{
+str name;
+str ammotype;
+str round;
+str size;
+int reload;
+raw spread;
+int maxammo;
+int speed;	
+};
+
+private Weapon_T NullWeapon = {
+	"Null",
+	"AutoGun",
+	"BaseBullet",
+	"Null",
+	0,
+	0,
+	0,
+	0
+};

@@ -60,7 +60,14 @@ ACTOR 84Rocket	: BaseBullet { Speed 0x80 Mass 0xB0 Health 1 Stamina 80 ReactionT
 		"####" A 1 A_GiveInventory("BulletHits", health)
 	}
 }
-ACTOR 37Shell	: 84Rocket { Speed 0x90 Mass 0x95 Health 40 Stamina 60 ReactionTime 50 }
+ACTOR 37Shell	: 84Rocket { Speed 0x90 Mass 0x95 Health 40 Stamina 60 ReactionTime 50
+	States { 
+	Spawn:
+		BDSH A 0 NoDelay
+		"####" A 1 A_GiveInventory("BulletHits", health)
+	}
+
+}
 
 ACTOR EntryWound : BloodSplatter
 { +CLIENTSIDEONLY States { Spawn:
@@ -107,7 +114,7 @@ ACTOR LaserDotTracer : BaseProj{
 			PTRD A 1
 			Loop
 		Crash: Death: XDeath:
-			PTMG A 2
+			PTMG A 4
 			Stop
 	}
 }

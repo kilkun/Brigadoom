@@ -1,7 +1,56 @@
-#include "zcommon.h"
+//Master datums
+struct xVehicle_T{
+	str name;
+	int type;
+	str step_sound;
+	int sound_radius;
+	int melee_damage;
+	int melee_radius;
+	fixed knockback_scale;
+	fixed directionaldamage[3];
+	int health;
+	int shields;
+	int overcharge;
+	int overcharge_bleed;
+	fixed cameradata[4][3];
+	str hud_bg;
+	fixed movement_data[4][2];
+	int rotation_speed;
+	int turret_rotation_width;
+	int turret_rotation_speed;
+	Mount_T& Mounts[2];
+	//str actors[2]; this is where our decorate actors for upper and lower go
+	
+	
+};
 
-//All datums are located here
+struct Mount_T{
+	int size;
+	int offset[3];
+	int rotation_speed;
+	int rotation_width;
+	int pitch_max;
+	int pitch_min;
+	xWeapon_T& gun;
+};
 
+struct xWeapon_T{
+	str name;
+	str ammotype;
+	str round;
+	int burst_count;
+	int burst_reload;
+	int reload;
+	int accuracy_cone_width;
+	int maxammo;
+	int speed;
+	int recoil;
+	int ammo_replenish;
+	str firesound;
+	int soundradius;
+	//str model;
+	
+};
 //Weapons
 #include "weapons.bcs"
 
@@ -10,3 +59,7 @@
 
 //Pilots
 //#include "pilots.bcs"
+#define MECH 0
+#define TANK 1
+#define AGRAV 2
+

@@ -3,7 +3,7 @@
 #include "structs.h"
 #include "menu.bcs"
 using BCSUtils;
-
+int bullet_inc = 1;
 Weapon_T& PrimaryWeapon = Nullweapon;
 Weapon_T& SecondaryWeapon = Nullweapon;
 Vehicle_T& Vehicle = Nullvehicle;
@@ -21,6 +21,30 @@ function int AddToAngle(int angle, int addition)
 	}
 }
 
+function void FireProjectile(xWeapon_T& Weapon, fixed angle, fixed xoffset, fixed yoffset, fixed zoffset){
+	fixed velx0, vely0, velz0;
+	velx0 = Weapon.speed << 16;
+	
+	//spread
+	vely0 = Weapon.spread << 16;
+	vely0 = random(-vely0, vely0);
+	velz0 = Weapon.spread << 16;
+	fixed velz = random(-velz0, velz0);
+	//rotate the vector of x and y along angle angle
+	RotateVector(velx0, vely0, angle);
+	fixed velx = r1;
+	fixed vely = r2;
+	
+	//spawn the projectile (need to pass x and y coords)
+	Spawn(Weapon.round, xoffset, yoffset, zoffset, bullet, bullet_inc);
+	//set the velocity to the rotated vector
+	SetActorVelocity(bullet_inc, velx >> 16, vely >> 16, velz >> 16);
+	bullet_inc++;
+	if(bullet_inc==10){
+		bullet_inc = 1;
+	}
+}
+
 SCRIPT "main" (void) ENTER
 {
 	Weapon_T& MyPrimary = Nullweapon;
@@ -30,11 +54,7 @@ SCRIPT "main" (void) ENTER
 	int PlayerZ = GetActorZ(0);
 	int MuzzleHeight = PlayerZ + (36 << 16);
 	
-	int Muzzle1X;	
-	int Muzzle1Y;
-	int Muzzle2X;	
-	int Muzzle2Y;
-	int PureAngle;
+	int Muzzle1X, Muzzle2X, Muzzle2Y, Muzzle2Y, PureAngle;
 	
 	Thing_ChangeTID(0, 100+PlayerNumber());
 	PrimaryWeapon = Bonesaw;
@@ -93,14 +113,7 @@ SCRIPT "PlayerLaserSight" (void) ENTER{
 
 SCRIPT "PrimaryFire" (void) {
 
-	int fireangle = GetActorAngle(0) >> 8;
-	int vspeed = -sin(GetActorPitch(0)) * 128 >> 16;
-	
-	
-	SpawnProjectile(200+PlayerNumber(), 
-	PrimaryWeapon.round, fireangle + random(-PrimaryWeapon.spread,PrimaryWeapon.spread), 
-	PrimaryWeapon.speed, vspeed + random(-PrimaryWeapon.spread,PrimaryWeapon.spread), 
-	1, 0);
+	FireProjectile(xBonesaw, GetActorAngle(0), GetActorX(0), GetActorY(0), GetActorZ(0));
 	
 	
 	TakeInventory(PrimaryWeapon.AmmoType, 1);
@@ -118,13 +131,4 @@ SCRIPT "SecondaryFire" (void) {
 	
 	TakeInventory(SecondaryWeapon.AmmoType, 1);
 	Delay(SecondaryWeapon.reload);
-}
-
-SCRIPT "BulletDied" (int HullDamage, int ShieldDamage, int StructureDamage){
-	
-}
-
-SCRIPT 1 (int height){
-	SetActorProperty(0,APROP_ViewHeight,height);
-	log(s:"Success");
 }
